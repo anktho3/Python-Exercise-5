@@ -2,6 +2,9 @@
 This application is designed to be used as ordering software for Neato Burrito. It will greet a customer and start the ordering
 process. The customer will then be able to confirm their order or cancel it.
 '''
+from types import NoneType
+
+
 base_price = float(5.00)
 add_ons = float(0.00)  # Cost of add-ons will be added in this variable
 total_price = float(0.00)
@@ -15,6 +18,8 @@ def main_ingredients_function(user_ingredient_selection):
     add_ons = float(0)
     done = False
     while done == False:
+        if user_ingredient_selection == 0:
+            continue
         if int(user_ingredient_selection) == 1:
             custOrder.append(main_ingredients[0])
             add_ons += main_ingredients_price["ground_beef"]
@@ -43,26 +48,38 @@ def main_ingredients_function(user_ingredient_selection):
         #     continue
         
         check = input("Would you like to make another protein selection? (it costs extra) [y/N] \n")
-        try:
-            if check[0].upper() == "Y":
-                print("Please add another meat of your choice.")
-                print("######## DOUBLE PROTEINS ########")
-                print("")
-                for item_number, proteins in enumerate(double_meat):  # Prints out the items as a numbered list for main ingredients
-                    print(item_number + 1, proteins.replace("_", " ").capitalize())
-                print("")
-                print("##########################")
-                user_ingredient_selection = input("Please select your protein using values 1 - 6: \n")
-                add_ons += double_meat_function(user_ingredient_selection)
-                return add_ons
-            else:
+        while True:
+            try:
+                if check[0].upper() == "Y":
+                    print("Please add another meat of your choice.")
+                    print("######## DOUBLE PROTEINS ########")
+                    print("")
+                    for item_number, proteins in enumerate(double_meat):  # Prints out the items as a numbered list for main ingredients
+                        print(item_number + 1, proteins.replace("_", " ").capitalize())
+                    print("")
+                    print("##########################")
+                    user_ingredient_selection = input("Please select your protein using values 1 - 6: \n")
+                    add_ons += double_meat_function(user_ingredient_selection)
+                    return add_ons
+                elif check[0].upper() == "N":
+                    print("Understood, moving to next options for your order.\n")
+                    return add_ons
+                elif check[0].upper() != "Y" or "N":
+                    user_ingredient_selection = 0
+                    check = input("Please enter a valid choice [y/N]: ")
+                    continue
+                elif len(check) != 0:
+                    user_ingredient_selection = 0
+                    check = input("Please enter a valid choice [y/N]: ")   
+                    continue
+                else:
+                    print("Understood, moving to next options for your order.\n")
+                    return add_ons
+            except IndexError:
                 print("Understood, moving to next options for your order.\n")
                 return add_ons
-        except IndexError:
-            print("Understood, moving to next options for your order.\n")
-            return add_ons
-        except ValueError:
-            break
+            except ValueError:
+                break
 
 def double_meat_function(user_ingredient_selection):
     '''
@@ -95,21 +112,30 @@ def double_meat_function(user_ingredient_selection):
         if int(user_ingredient_selection) == 6:
             custOrder.append(double_meat[5])
             add_ons += double_meat_price["double_sofritas"]
-        # else:
-        #     print("Sorry that option doesn't exist. Please make a selection 1 - 6\n")
+        else:
+            user_ingredient_selection = input("\nSorry that option doesn't exist. Please make a selection 1 - 6: ")
+            continue
 
         check = input("Would you like to make another selection? [y/N] \n")
-        try:
-            if check[0].upper() == "Y":
-                print("Please make another selection.")
-            else:
+        while True:
+            try:
+                if check[0].upper() == "Y":
+                    print("Please make another selection.")
+                elif check[0].upper() != "Y" or "N" or len(check) != 0:
+                    user_ingredient_selection = 0
+                    check = input("Please enter a valid choice [y/N]: ")
+                elif check[0].upper() == "N":
+                    print("Understood, moving to next options for your order.\n")
+                    done = True
+                    return add_ons
+                else:
+                    print("Understood, moving to next options for your order.\n")
+                    return add_ons
+            except IndexError:
                 print("Understood, moving to next options for your order.\n")
                 return add_ons
-        except IndexError:
-            print("Understood, moving to next options for your order.\n")
-            return add_ons
-        except ValueError:
-            break
+            except ValueError:
+                break
 
 def rice_beans_function(user_ingredient_selection):
     '''
@@ -140,17 +166,22 @@ def rice_beans_function(user_ingredient_selection):
 
             print("Would you like to add any other Rice or Beans? [1 - 4] or No to finish your order \n")
             user_ingredient_selection = input()
-            try:
-                if user_ingredient_selection[0].upper() == "N":
+            while True:
+                try:
+                    if user_ingredient_selection[0].upper() == "N":
+                        done = True
+                        return add_ons
+                    elif user_ingredient_selection[0].upper() != "Y" or "N" or len(check) != 0:
+                        user_ingredient_selection = 0
+                        user_ingredient_selection = input("Please enter a valid choice [1-4 or y/N]: ")
+                        continue
+                    else:
+                        continue
+                except ValueError:
+                    break
+                except IndexError:
                     done = True
                     return add_ons
-                else:
-                    continue
-            except ValueError:
-                break
-            except IndexError:
-                done = True
-                return add_ons
     except:
         return add_ons
 
