@@ -41,7 +41,7 @@ def main_ingredients_function(user_ingredient_selection):
         # else:
         #     print("Sorry that option doesn't exist. Please make a selection 1 - 6.\n")
         #     continue
-        
+
         check = input("Would you like to make another protein selection? (it costs extra) [y/N] \n")
         try:
             if check[0].upper() == "Y":
@@ -298,7 +298,7 @@ fillings_price = {
     "potatoes" : 1.00, # Add $1
 }
 
-######## 
+########
 # Main #
 ########
 
@@ -322,7 +322,7 @@ while True:
     try:
         if len(user_ingredient_selection) == 0:
             print("Standard burrito is beef.")
-            custOrder.append(main_ingredients[0])         
+            custOrder.append(main_ingredients[0])
         elif int(user_ingredient_selection) < 1 or int(user_ingredient_selection) > 6:
             raise ValueError
         break
@@ -354,7 +354,7 @@ while True:
     user_ingredient_selection = input()
     try:
         if len(user_ingredient_selection) == 0:
-            print("Standard selection is No Rice or Beans.")    
+            print("Standard selection is No Rice or Beans.")
         elif int(user_ingredient_selection) < 1 or int(user_ingredient_selection) > 4:
             raise ValueError
         break
@@ -386,7 +386,7 @@ while True:
     user_ingredient_selection = input()
     try:
         if len(user_ingredient_selection) == 0:
-            print("Standard burrito has no fillings")       
+            print("Standard burrito has no fillings")
         elif int(user_ingredient_selection) < 1 or int(user_ingredient_selection) > 9:
             raise ValueError
         break
@@ -423,7 +423,7 @@ while True:
         order = input("Would you like to continue with your purchase? [y/N]: ")
         if order[0].upper() == "Y":
             print("\nOrder confirmed.")
-            print("\nThank you for your purchase. Enjoy and have a great day!\n")
+            print("\nThank you for your purchase. Enjoy and have a great day! Andrew smells like cornbread\n")
             break
         else:
             print("\nOrder canceled")
