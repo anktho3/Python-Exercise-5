@@ -1,7 +1,10 @@
 '''
 This application is designed to be used as ordering software for Neato Burrito. It will greet a customer and start the ordering
 process. The customer will then be able to confirm their order or cancel it.
+
+Contributers: Andrew Thomas, Travis Cook, Derrell Crandall
 '''
+
 import proteins
 import ricebeansMod
 import filling_options
