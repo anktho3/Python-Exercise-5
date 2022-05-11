@@ -1,4 +1,7 @@
-
+'''
+This application is designed to be used as ordering software for Neato Burrito. It will greet a customer and start the ordering
+process. The customer will then be able to confirm their order or cancel it.
+'''
 base_price = float(5.00)
 add_ons = float(0.00)  # Cost of add-ons will be added in this variable
 total_price = float(0.00)
@@ -35,14 +38,19 @@ def main_ingredients_function(user_ingredient_selection):
         if int(user_ingredient_selection) == 6:
             custOrder.append(main_ingredients[5])
             add_ons += main_ingredients_price["sofritas"]
+        # else:
+        #     print("Sorry that option doesn't exist. Please make a selection 1 - 6.\n")
+        #     continue
         
         check = input("Would you like to make another protein selection? (it costs extra) [y/N] \n")
         try:
             if check[0].upper() == "Y":
                 print("Please add another meat of your choice.")
                 print("######## DOUBLE PROTEINS ########")
+                print("")
                 for item_number, proteins in enumerate(double_meat):  # Prints out the items as a numbered list for main ingredients
                     print(item_number + 1, proteins.replace("_", " ").capitalize())
+                print("")
                 print("##########################")
                 user_ingredient_selection = input("Please select your protein using values 1 - 6: \n")
                 add_ons += double_meat_function(user_ingredient_selection)
@@ -87,7 +95,9 @@ def double_meat_function(user_ingredient_selection):
         if int(user_ingredient_selection) == 6:
             custOrder.append(double_meat[5])
             add_ons += double_meat_price["double_sofritas"]
-        
+        # else:
+        #     print("Sorry that option doesn't exist. Please make a selection 1 - 6\n")
+
         check = input("Would you like to make another selection? [y/N] \n")
         try:
             if check[0].upper() == "Y":
@@ -100,9 +110,6 @@ def double_meat_function(user_ingredient_selection):
             return add_ons
         except ValueError:
             break
-
-
-
 
 def rice_beans_function(user_ingredient_selection):
     '''
@@ -128,6 +135,9 @@ def rice_beans_function(user_ingredient_selection):
             if int(user_ingredient_selection) == 4:
                 custOrder.append(rice_or_beans[3])
                 add_ons += rice_or_beans_price["no_beans"]
+            # else:
+            #     print("Sorry that option doesn't exist. Please make a selection 1 - 4.\n")
+
             print("Would you like to add any other Rice or Beans? [1 - 4] or No to finish your order \n")
             user_ingredient_selection = input()
             try:
@@ -153,8 +163,8 @@ def filling_function(user_ingredient_selection):
     add_ons = float(0)
     try:
         while done == False:
-            if user_ingredient_selection == str():
-                print("Please only enter values 1 - 9.")
+            # if user_ingredient_selection == str():
+            #     print("Please only enter values 1 - 9.")
 
             if int(user_ingredient_selection) == 1:
                 custOrder.append(fillings_list[0])
@@ -192,8 +202,8 @@ def filling_function(user_ingredient_selection):
                 custOrder.append(fillings_list[8])
                 add_ons += fillings_price["potatoes"]
             # else:
-            #     done = True
-            #     return add_ons
+            #     print("Sorry that option doesn't exist. Please make a selection 1 - 9.\n")
+
             print("Would you like to add any other fillings? [1 - 9] or No to finish your order. \n")
             user_ingredient_selection = input()
             try:
@@ -203,18 +213,15 @@ def filling_function(user_ingredient_selection):
                 else:
                     continue
             except ValueError:
-                done = True
+                # done = True
                 return add_ons
             except IndexError:
                 done = True
                 return add_ons
     except ValueError:
-        print("Please only enter values 1 - 9.")
+        return add_ons
 
-        
-        
-
-
+# Protein prices shown to customer/user with the basic burrito cost already applied.
 main_ingredients = [
     "ground_beef ($5.00)",
     "carne_asada ($6.00)", # Add $1
@@ -223,7 +230,7 @@ main_ingredients = [
     "chicken ($5.00)",
     "sofritas ($5.00)",
 ]
-
+# Protein dictionary for refrencing price. Standard ingredients are included in base_price variable hence 0.00
 main_ingredients_price = {
     "ground_beef" : 0.00,
     "carne_asada" : 1.00, # Add $1
@@ -243,6 +250,7 @@ double_meat = [
     "sofritas ($1.00)",
 ]
 
+# Double meat dictionary for refrencing price
 double_meat_price= {
     "double_ground_beef" : 1.00,
     "double_carne_asada" : 2.00, # Add $1
@@ -251,7 +259,6 @@ double_meat_price= {
     "double_chicken" : 1.00,
     "double_sofritas" : 1.00,
 }
-
 
 rice_or_beans = [
     "rice (add $0.25)", # Add $0.25
@@ -276,7 +283,7 @@ fillings_list = [
     "green_chile_salsa (add $0.25", # Add $0.25
     "cheese",
     "extra_cheese (add $0.50)",  # Add $0.50
-    "potatoes (add $0.50)", # Add $1
+    "potatoes (add $1.00)", # Add $1
 ]
 
 fillings_price = {
@@ -291,76 +298,140 @@ fillings_price = {
     "potatoes" : 1.00, # Add $1
 }
 
+######## 
+# Main #
+########
 
-'''
-Main
-'''
-
+# Get customer name and greet them
 name = input("What is your name? ").title()
 print("Hello " + name + ", Welcome to Neato Burrito!\n")
 
 print("Please select the ingredients you would like in your Burrito below.\n")
 
+# Protein selection
 print("######## PROTEINS ########")
+print("")
 for item_number, ingredients in enumerate(main_ingredients):  # Prints out the items as a numbered list for main ingredients
     print(item_number + 1, ingredients.replace("_", " ").capitalize())
+print("")
 print("##########################")
 print("Please select your protein using values 1 - 6: \n")
-try:
+# While loop for protein selection. The try/except blocks are configured for error handling.
+while True:
     user_ingredient_selection = input()
+    try:
+        if len(user_ingredient_selection) == 0:
+            print("Standard burrito is beef.")
+            custOrder.append(main_ingredients[0])         
+        elif int(user_ingredient_selection) < 1 or int(user_ingredient_selection) > 6:
+            raise ValueError
+        break
+    except ValueError:
+        print("Sorry that option doesn't exist. Please make a selection 1 - 6.\n")
+        continue
+    except IndexError:
+        print("Sorry that option doesn't exist. Please make a selection 1 - 6.\n")
+        continue
+# try/except block for adding rice and beans cost to add_ons variable
+try:
     add_ons += main_ingredients_function(user_ingredient_selection)
 except ValueError:
-    print("Standard burrito is beef, okay?")
-    custOrder.append(main_ingredients[0])
-    
+    print("")
+
 print("You have selected:\n" + str(custOrder[:]))
 print("")
 
+# Rice and Bean selection
 print("######### RICE & BEANS #########")
+print("")
 for item_number, rice_beans in enumerate(rice_or_beans):  # Prints out the items as a numbered list for Rice and beans
     print(item_number + 1, rice_beans.replace("_", " ").capitalize())
+print("")
 print("################################")
 print("Please select one of the Rice and Beans options using values 1 - 4: \n")
-user_ingredient_selection = input()
-add_ons += rice_beans_function(user_ingredient_selection)
-
-
+# While loop for the rice and beans selection. The try/except blocks are configured for error handling.
+while True:
+    user_ingredient_selection = input()
+    try:
+        if len(user_ingredient_selection) == 0:
+            print("Standard selection is No Rice or Beans.")    
+        elif int(user_ingredient_selection) < 1 or int(user_ingredient_selection) > 4:
+            raise ValueError
+        break
+    except ValueError:
+        print("Sorry that option doesn't exist. Please make a selection 1 - 4.\n")
+        continue
+    except IndexError:
+        print("Sorry that option doesn't exist. Please make a selection 1 - 4.\n")
+        continue
+# try/except block for adding rice and beans cost to add_ons variable
+try:
+    add_ons += rice_beans_function(user_ingredient_selection)
+except ValueError:
+    print("")
 
 print("You have selected:\n" + str(custOrder[:]))
 
+# Fillings selection
 print("Please select the fillings you would like to add to the burrito.\n")
 print("######### FILLINGS #########")
+print("")
 for item_number, fillings in enumerate(fillings_list):  # Prints out the items as a numbered list
     print(item_number + 1, fillings.replace("_", " ").capitalize())
+print("")
 print("############################")
 print("Please select your filling using values 1 - 9: \n")
-user_ingredient_selection = input()
-add_ons += filling_function(user_ingredient_selection)
+# While loop for filling selection. The try/except blocks are configured for error handling.
+while True:
+    user_ingredient_selection = input()
+    try:
+        if len(user_ingredient_selection) == 0:
+            print("Standard burrito has no fillings")       
+        elif int(user_ingredient_selection) < 1 or int(user_ingredient_selection) > 9:
+            raise ValueError
+        break
+    except ValueError:
+        print("Sorry that option doesn't exist. Please make a selection 1 - 9.\n")
+        continue
+    except IndexError:
+        print("Sorry that option doesn't exist. Please make a selection 1 - 9.\n")
+        continue
+# try/except block for adding filling cost to add_ons variable
+try:
+    add_ons += filling_function(user_ingredient_selection)
+except ValueError:
+    print("")
 
 # This calculates the total price of the order with addons.
 total_price = base_price + add_ons
 
+# Prints out order for confirmation
 print("\n######## ORDER #########")
+print("")
 for items in custOrder:
     print(items.replace("_", " ").capitalize())
+print("")
 print("########################")
 print("Total price: ${:.2f}".format(total_price)) # Using specific formatting to get 2 decimal point precision.
 
 # print(add_ons)
 print("\nPlease confirm your order by agreeing to the price and listed ingredients.\n")
 
-
 # Loop asks customer for confirmation and will cancel order if not accepted
 while True:
     try:
-        order = input("Would you like to continue with your purchase? [y/N] \n")
+        order = input("Would you like to continue with your purchase? [y/N]: ")
         if order[0].upper() == "Y":
-            print("Order confirmed.")
+            print("\nOrder confirmed.")
+            print("\nThank you for your purchase. Enjoy and have a great day!\n")
             break
         else:
-            print("Order canceled")
+            print("\nOrder canceled")
+            print("\nHave a great day!")
             break
     except IndexError:
-        print("Order canceled")
+        print("\nOrder canceled")
+        print("\nHave a great day!")
         break
-print("Thank you for your purchase. Enjoy and have a great day!\n")
+
+## End ##
